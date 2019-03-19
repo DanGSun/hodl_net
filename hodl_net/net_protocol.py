@@ -6,7 +6,7 @@ from hodl_net.database import db_worker
 @server.handle('share', 'request')
 @db_worker.with_session
 async def share_peers(_):
-    peers = [_peer.dump() for _peer in session.query(Peer).all()]
+    peers = [_peer.dump() for _peer in session.query(Peer).all()] # TODO: Reject all local peers
     users = [_user.dump() for _user in session.query(User).all()]
     peer.request(Message(
         name='share_info',
@@ -50,6 +50,13 @@ async def record_peers(message):
 @server.handle('ping', 'request')
 async def ping(_):
     pass
+
+
+@server.handle('echo', 'request')
+async def echo(message):
+    peer.response(message, Message('echo_resp', {
+        'msg': message.data['msg']
+    }))
 
 
 if __name__ == '__main__':

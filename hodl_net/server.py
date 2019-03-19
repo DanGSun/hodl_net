@@ -9,7 +9,7 @@ from hodl_net.errors import UnhandledRequest
 from hodl_net.database import db_worker
 from hodl_net.cryptogr import gen_keys
 from hodl_net.globals import *
-from hodl_net.discovery import LPD
+from hodl_net.discovery import LPD, PublicPeerExchange
 from hodl_net.utils import NatWorker
 from hodl_net.config_loader import load_conf
 
@@ -341,6 +341,9 @@ class Server:
 
             if nat_worker:
                 self.ext_addr = nat_worker.get_addrs()
+
+        if conf_file['ppx']['enabled']:
+            ppx = PublicPeerExchange(self)
 
         log.info("Plugin loading finished.")
 

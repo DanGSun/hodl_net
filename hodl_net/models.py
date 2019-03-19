@@ -2,12 +2,13 @@
 Models, required for net full-functioning
 """
 
-from sqlalchemy import Column, String
+from sqlalchemy import Column, String, Boolean
 from typing import TypeVar, List, Any, Dict
 
 from hodl_net.cryptogr import get_random, verify, sign, encrypt, decrypt
 from hodl_net.errors import BadRequest, VerificationFailed, CryptogrError
 from hodl_net.database import Base
+from hodl_net.utils.localchecker import check_ip
 
 import logging
 import uuid
@@ -289,11 +290,22 @@ class MessageWrapper:
 class Peer(Base):
     __tablename__ = 'peers'
 
-    addr = Column(String, primary_key=True)
+    _addr = Column(String, primary_key=True)
+    local = Column(Boolean, default=False)
+    addr = property()
 
     def __init__(self, proto, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.proto = proto
+
+    @addr.getter
+    def addr(self):
+        return self._addr
+
+    @addr.setter
+    def addr(self, val):
+        self._addr = val
+        self.local = check_ip(val.split(":")[0])
 
     def copy(self):
         return self

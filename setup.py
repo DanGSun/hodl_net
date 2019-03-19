@@ -14,6 +14,7 @@ setup(
                       'pycryptodome',
                       'sqlalchemy',
                       'toml',
-                      'upnpclient'
+                      'upnpclient',
+                      'netaddr'
                       ]
 )

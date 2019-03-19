@@ -37,12 +37,12 @@ title = "hodleum netstack config"
 
     nodes = [
 
-    "startnode.hodleum.org:49390",
+    "startnode.hodleum.org:8000",
     "node.hodleum.solarfind.net:8000"
 
     ]
 
 ["upnp"]
-    enabled = true
+    enabled = false
 
     search_timeout = 2

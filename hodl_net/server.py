@@ -102,9 +102,12 @@ class PeerProtocol(DatagramProtocol):
         if not _peer:
             _peer = Peer(self, addr=addr)
             ses.add(_peer)
-            ses.commit()
-            log.debug(f'New peer {addr}')
-            _peer.request(Message('share'))
+            try:
+                ses.commit()
+                log.debug(f'New peer {addr}')
+                _peer.request(Message('share'))
+            except sqlalchemy.exc.IntegrityError:
+                log.warning(f"Cannot add peer {addr}, because it is already exists")
         _peer.proto = self
 
         _user = None

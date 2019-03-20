@@ -343,7 +343,7 @@ class Server:
                 self.ext_addr = nat_worker.get_addrs()
 
         if conf_file['ppx']['enabled']:
-            ppx = PublicPeerExchange(self)
+            ppx = PublicPeerExchange(self, bootstrap_servers=conf_file['ppx']['nodes'])
 
         log.info("Plugin loading finished.")
 

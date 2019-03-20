@@ -17,6 +17,6 @@ def get_ip():
 
 def check_ip(ip, ip_net=IPNetwork(get_ip()).cidr):
     is_local = False
-    if IPAddress(ip) in IPNetwork(ip_net):
+    if IPAddress(ip) in IPNetwork(ip_net) and IPAddress(ip) != IPAddress(get_ip()):
             is_local = True
     return is_local

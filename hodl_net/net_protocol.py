@@ -6,7 +6,7 @@ from hodl_net.database import db_worker
 @server.handle('share', 'request')
 @db_worker.with_session
 async def share_peers(_):
-    peers = [_peer.dump() for _peer in session.query(Peer).all()] # TODO: Reject all local peers
+    peers = [_peer.dump() for _peer in session.query(Peer).all() if not _peer.local]
     users = [_user.dump() for _user in session.query(User).all()]
     peer.request(Message(
         name='share_info',

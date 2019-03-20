@@ -1,6 +1,7 @@
 from hodl_net.models import *
 from hodl_net.server import peer, protocol, server, session, call_from_thread
 from hodl_net.database import db_worker
+import sqlalchemy.exc
 
 
 @server.handle('share', 'request')
@@ -37,8 +38,12 @@ async def record_new_user(message):
 async def record_peers(message):
     for data in message.data['peers']:
         if not session.query(Peer).filter_by(addr=data['address']).first():
-            new_peer = Peer(protocol, addr=data['address'])
-            session.add(new_peer)  # TODO: test new peers
+            try:
+                new_peer = Peer(protocol, addr=data['address'])
+                session.add(new_peer)  # TODO: test new peers
+            except sqlalchemy.exc.IntegrityError as e:
+                log.warning("Fail on peer adding. Probably already exists. More info:")
+                log.debug(e)
 
     for data in message.data['users']:
         if not session.query(User).filter_by(name=data['name']):
